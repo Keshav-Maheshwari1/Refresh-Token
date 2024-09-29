@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class User {
     @Id
     private String id;
