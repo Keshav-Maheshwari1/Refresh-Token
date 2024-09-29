@@ -11,7 +11,7 @@
 	<groupId>com.refreshtoken</groupId>
 	<artifactId>refreshtoken</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RefresTtoken</name>
+	<name>RefreshToken</name>
 	<description>Jwt Token With Refresh Token</description>
 	<url/>
 	<licenses>
