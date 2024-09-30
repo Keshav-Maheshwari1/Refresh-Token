@@ -1,6 +1,8 @@
 package com.refreshtoken.controllers;
 
 import com.refreshtoken.entities.User;
+import com.refreshtoken.models.JwtRequest;
+import com.refreshtoken.models.JwtResponse;
 import com.refreshtoken.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +30,24 @@ public class UserController {
     public ResponseEntity<List<User>> allUsers() {
         return userService.allUsers();
     }
-    @PostMapping("/user")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+
+    @PostMapping("/auth/signup")
+    public ResponseEntity<String> signUp(@RequestBody User user) {
+        User existingUser = userService.getUser(user.getEmail()).getBody();
+        if(existingUser != null){
+            JwtResponse response = signIn(new JwtRequest(user.getEmail(), user.getPassword())).getBody();
+            if(response != null){
+                return ResponseEntity.ok(response.getJwtToken());
+            }else{
+                return ResponseEntity.badRequest().body("User already exists! and invalid credentials");
+            }
+        }
         return userService.createUser(user);
+    }
+
+    @PostMapping("/auth/signin")
+    public ResponseEntity<JwtResponse> signIn(@RequestBody JwtRequest request) {
+        return userService.loginUser(request);
     }
 
     @PutMapping("/user/{email}")
