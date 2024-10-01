@@ -5,6 +5,7 @@ import com.refreshtoken.models.JwtRequest;
 import com.refreshtoken.models.JwtResponse;
 import com.refreshtoken.reposiotry.UserRepository;
 import com.refreshtoken.security.JwtHelper;
+import com.refreshtoken.service.RefreshTokenService;
 import com.refreshtoken.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtHelper jwtHelper;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
 
     @Autowired
     private final AuthenticationManager authenticationManager;
@@ -36,7 +41,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private  UserRepository userRepository;
 
-    public UserServiceImpl(AuthenticationManager authenticationManager,  PasswordEncoder passwordEncoder, JwtHelper jwtHelper, UserRepository userRepository) {
+    public UserServiceImpl(
+            AuthenticationManager authenticationManager,
+            PasswordEncoder passwordEncoder,
+            JwtHelper jwtHelper,
+            UserRepository userRepository,
+            RefreshTokenService refreshTokenService)
+    {
+        this.refreshTokenService = refreshTokenService;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.jwtHelper = jwtHelper;
@@ -74,6 +86,7 @@ public class UserServiceImpl implements UserService {
             JwtResponse jwtResponse = JwtResponse.builder()
                     .username(request.getEmail())
                     .jwtToken(jwtHelper.generateTokenFromUsername(user.getUsername()))
+                    .refreshToken(Objects.requireNonNull(refreshTokenService.createToken(request.getEmail()).getBody()).getRefreshToken())
                     .build();
             return ResponseEntity.ok(jwtResponse);
         }

@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        String[] allowedRequests = {"/api/v1/auth/signup","/api/v1/auth/signin"};
+        String[] allowedRequests = {"/api/v1/auth/signup","/api/v1/auth/signin","/api/v1/auth/refresh-jwt"};
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth->auth.requestMatchers(allowedRequests).permitAll()
                         .anyRequest().authenticated())

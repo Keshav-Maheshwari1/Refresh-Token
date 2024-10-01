@@ -1,11 +1,11 @@
 package com.refreshtoken.reposiotry;
 
 import com.refreshtoken.entities.RefreshToken;
-import com.refreshtoken.entities.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends MongoRepository<User,String> {
-    User findByEmail(String email);
+public interface RefreshTokenRepository extends MongoRepository<RefreshToken,String> {
+    RefreshToken findByRefreshToken(String refreshToken);
+    RefreshToken findByUserEmail(String userEmail);
 }
